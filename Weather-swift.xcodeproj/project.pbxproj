@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		ABB112107F5883F35A3E0511 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ABB1102C08ECF8BC1E94D3EC /* Info.plist */; };
 		ABB11280EA0667561E88EA26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABB11707C0D2BD46EF7F1974 /* Assets.xcassets */; };
 		ABB115333F9A3FBEEB99EF8A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB11EC5486FAF9D49A0B7F1 /* AppDelegate.swift */; };
 		ABB1180880B3724261AAA439 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABB11AF9D1DAE6677674C17E /* Main.storyboard */; };
@@ -92,6 +91,11 @@
 			isa = PBXProject;
 			attributes = {
 				ORGANIZATIONNAME = "Kirill Pyulzyu";
+				TargetAttributes = {
+					ABB1113F962875A853554DBE = {
+						DevelopmentTeam = 5D855L4MSP;
+					};
+				};
 			};
 			buildConfigurationList = ABB114E3E02074BEDDF00884 /* Build configuration list for PBXProject "Weather-swift" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -115,7 +119,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ABB112107F5883F35A3E0511 /* Info.plist in Resources */,
 				ABB11280EA0667561E88EA26 /* Assets.xcassets in Resources */,
 				ABB11F6965FBF20AC63AF292 /* LaunchScreen.storyboard in Resources */,
 				ABB1180880B3724261AAA439 /* Main.storyboard in Resources */,
@@ -160,6 +163,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 5D855L4MSP;
 				INFOPLIST_FILE = "Weather-swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "KP.Weather-swift";
@@ -267,6 +271,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 5D855L4MSP;
 				INFOPLIST_FILE = "Weather-swift/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "KP.Weather-swift";
@@ -294,6 +299,7 @@
 				ABB11BED066735A5D32CC334 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
