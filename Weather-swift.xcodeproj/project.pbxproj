@@ -10,6 +10,8 @@
 		ABB11280EA0667561E88EA26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABB11707C0D2BD46EF7F1974 /* Assets.xcassets */; };
 		ABB115333F9A3FBEEB99EF8A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB11EC5486FAF9D49A0B7F1 /* AppDelegate.swift */; };
 		ABB1180880B3724261AAA439 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABB11AF9D1DAE6677674C17E /* Main.storyboard */; };
+		ABB11B4007B9D77413EBC100 /* CitiesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB1103FC148DF41878FF0F9 /* CitiesStorage.swift */; };
+		ABB11C513FDBBE113CC8BBAC /* CitiesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB114004C427291BF7EA385 /* CitiesListViewController.swift */; };
 		ABB11DF4D2511BCA1DED0876 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB1149E913C6D7609318BB2 /* ViewController.swift */; };
 		ABB11F6965FBF20AC63AF292 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABB117BCD6F6CFEA3F37B152 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -17,6 +19,8 @@
 /* Begin PBXFileReference section */
 		ABB1102B2471D0A4B9817204 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ABB1102C08ECF8BC1E94D3EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
+		ABB1103FC148DF41878FF0F9 /* CitiesStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CitiesStorage.swift; sourceTree = "<group>"; };
+		ABB114004C427291BF7EA385 /* CitiesListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CitiesListViewController.swift; sourceTree = "<group>"; };
 		ABB1149E913C6D7609318BB2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		ABB116D9547E39BD6DE3EC12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ABB11707C0D2BD46EF7F1974 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -52,6 +56,8 @@
 				ABB11EC5486FAF9D49A0B7F1 /* AppDelegate.swift */,
 				ABB11AF9D1DAE6677674C17E /* Main.storyboard */,
 				ABB1149E913C6D7609318BB2 /* ViewController.swift */,
+				ABB1103FC148DF41878FF0F9 /* CitiesStorage.swift */,
+				ABB114004C427291BF7EA385 /* CitiesListViewController.swift */,
 			);
 			path = "Weather-swift";
 			sourceTree = "<group>";
@@ -134,6 +140,8 @@
 			files = (
 				ABB115333F9A3FBEEB99EF8A /* AppDelegate.swift in Sources */,
 				ABB11DF4D2511BCA1DED0876 /* ViewController.swift in Sources */,
+				ABB11B4007B9D77413EBC100 /* CitiesStorage.swift in Sources */,
+				ABB11C513FDBBE113CC8BBAC /* CitiesListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
