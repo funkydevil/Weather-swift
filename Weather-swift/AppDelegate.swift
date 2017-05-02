@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let vc = CitiesListViewController()
         let nc = UINavigationController(rootViewController: vc)
+        nc.navigationBar.isTranslucent = false
 
         self.window = UIWindow()
         self.window!.frame = UIScreen.main.bounds

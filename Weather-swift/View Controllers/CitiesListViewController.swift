@@ -18,6 +18,10 @@ class CitiesListViewController: UIViewController, UITableViewDataSource {
         self.initUI()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
 
     private func initUI() {
         self.view.addSubview(self.tableView)
@@ -30,10 +34,13 @@ class CitiesListViewController: UIViewController, UITableViewDataSource {
     }
 
     func onBtnAddTapped(_ sender: UIButton) {
-        let cityModel = CityModel(name: "City", id: 1234)
+        /*let cityModel = CityModel(name: "City", id: 1234)
         CitiesStorage.sharedInstance.addCity(cityModel: cityModel)
         self.refreshDatasource()
-        self.tableView.reloadData()
+        self.tableView.reloadData()*/
+
+        let vc = NewCityViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
 
