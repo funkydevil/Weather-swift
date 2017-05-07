@@ -13,6 +13,7 @@ class NewCityViewController: UIViewController, UISearchBarDelegate, UITableViewD
     lazy var searchBar: UISearchBar = self.lazySearchBar()
     lazy var tableView: UITableView = self.lazyTableView()
     var datasource = Array<CityModel>()
+    var blockOnCitySelected:((_ cityModel:CityModel)->Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,6 +81,16 @@ class NewCityViewController: UIViewController, UISearchBarDelegate, UITableViewD
         return cell
     }
 
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cityModel = self.datasource[indexPath.row] as CityModel?{
+            if self.blockOnCitySelected != nil{
+                self.blockOnCitySelected!(cityModel)
+                self.navigationController!.popViewController(animated: true)
+            }
+        }
+    }
+
+
     //MARK: request
     func requestCities(cityName:String){
         let session = URLSession(configuration: .default)
@@ -98,7 +109,6 @@ class NewCityViewController: UIViewController, UISearchBarDelegate, UITableViewD
         
         let task = session.dataTask(with: url!) {
             data, response, error in
-            print("end request")
             if let error = error{
                 print(error.localizedDescription)
             }else if let httpResponse = response as? HTTPURLResponse{
@@ -112,7 +122,6 @@ class NewCityViewController: UIViewController, UISearchBarDelegate, UITableViewD
                 }
             }
         }
-        print("start request")
         task.resume()
     }
 

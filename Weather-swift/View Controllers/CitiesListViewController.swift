@@ -5,7 +5,7 @@
 
 import UIKit
 
-class CitiesListViewController: UIViewController, UITableViewDataSource {
+class CitiesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     lazy var tableView: UITableView = self.lazyTableView()
 
     override func viewWillAppear(_ animated: Bool) {
@@ -34,13 +34,7 @@ class CitiesListViewController: UIViewController, UITableViewDataSource {
     }
 
     func onBtnAddTapped(_ sender: UIButton) {
-        /*let cityModel = CityModel(name: "City", id: 1234)
-        CitiesStorage.sharedInstance.addCity(cityModel: cityModel)
-        self.refreshDatasource()
-        self.tableView.reloadData()*/
-
-        let vc = NewCityViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.switchToNewCityVC()
     }
 
 
@@ -50,6 +44,7 @@ class CitiesListViewController: UIViewController, UITableViewDataSource {
     func lazyTableView() -> UITableView {
         let tableView = UITableView(frame: self.view.bounds, style: .plain)
         tableView.dataSource = self
+        tableView.delegate = self
         return tableView
     }
 
@@ -63,8 +58,32 @@ class CitiesListViewController: UIViewController, UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        cell.textLabel!.text = String(indexPath.row)
+        if let cityModel = self.datasource[indexPath.row] as CityModel?{
+            cell.textLabel!.text = cityModel.name
+        }
         return cell
+    }
+
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let cityModel = CitiesStorage.sharedInstance.allCities()[indexPath.row]
+        let vc = CityDetailsViewController(cityModel: cityModel)
+        self.navigationController!.pushViewController(vc, animated: true)
+    }
+
+
+
+    //MARK: others
+    func switchToNewCityVC(){
+        let vc = NewCityViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+        vc.blockOnCitySelected = {
+            (cityModel:CityModel) in
+            CitiesStorage.sharedInstance.addCity(cityModel: cityModel)
+            self.refreshDatasource()
+            self.tableView.reloadData()
+        }
     }
 
 

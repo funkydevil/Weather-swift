@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CityDetailsViewController.swift
 //  Weather-swift
 //
 //  Created by Kirill Pyulzyu on 13.04.17.
@@ -9,37 +9,28 @@
 import UIKit
 
 
-struct WeatherDayModel {
-    let tempMin: Float?
-    let tempMax: Float?
-    let date: TimeInterval?
-
-    init(remoteDict: Dictionary<String, Any>) {
-        if let main = remoteDict["main"] as! Dictionary<String, Any>?,
-           let tempMin = main["temp_min"] as! Float?,
-           let tempMax = main["temp_max"] as! Float?,
-           let date = remoteDict["dt"] as! TimeInterval? {
-            self.tempMin = tempMin
-            self.tempMax = tempMax
-            self.date = date
-        }
-        else
-        {
-            self.tempMin = nil
-            self.tempMax = nil
-            self.date = nil
-        }
-    }
-}
-
-class ViewController: UIViewController, UITableViewDataSource {
+class CityDetailsViewController: UIViewController, UITableViewDataSource {
 
     var cityName: String?
-    var weatherDays = [WeatherDayModel]()
+    var weatherDays = [WeatherItemModel]()
+    var cityModel: CityModel?
+
+    lazy var tableView: UITableView = self.lazyTableView()
+    var datasource = [WeatherItemModel]()
+
+
+    init(cityModel: CityModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.cityModel = cityModel
+    }
+
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         initUI()
         getData()
     }
@@ -52,15 +43,28 @@ class ViewController: UIViewController, UITableViewDataSource {
 
     //MARK:UI
 
-    lazy var tableView: UITableView = self.lazyTableView()
-    var datasource = [WeatherDayModel]()
 
     func initUI() {
         self.view.addSubview(self.tableView)
     }
 
+    //MARK:table
+
     func refreshDatasource() {
-        self.datasource = self.weatherDays;
+
+        self.datasource.removeAll()
+
+        var lastDay:Int?
+        self.weatherDays.forEach {
+            (model: WeatherItemModel) in
+            let weatherItemDay = self.dayNumFromTimeInterval(model.date!)
+            guard lastDay != weatherItemDay
+            else{
+                return
+            }
+            self.datasource.append(model)
+            lastDay = weatherItemDay
+        }
     }
 
     func lazyTableView() -> UITableView {
@@ -78,30 +82,27 @@ class ViewController: UIViewController, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         var cell = self.tableView.dequeueReusableCell(withIdentifier: "dayCell")
-        if cell == nil{
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "dayCell")
+        if cell == nil {
+            cell = UITableViewCell(style: .value1, reuseIdentifier: "dayCell")
         }
-        
+
         cell = configureCell(cell!, at: indexPath)
 
         return cell!
     }
-    
-    
-    func configureCell(_ cell:UITableViewCell, at indexPath:IndexPath)->UITableViewCell {
+
+
+    func configureCell(_ cell: UITableViewCell, at indexPath: IndexPath) -> UITableViewCell {
         let model = self.datasource[indexPath.row]
         let dateTimeFormater = DateFormatter()
-        dateTimeFormater.timeStyle = .short
-        dateTimeFormater.dateStyle = .short
+        dateTimeFormater.dateStyle = .medium
         let dateString = dateTimeFormater.string(from: Date(timeIntervalSince1970: model.date!))
-        let maxTempString = String(model.tempMax!)
-        let minTempString = String(model.tempMax!)
-        
-        let tempString = "From \(minTempString) to \(maxTempString)"
-        
-        cell.textLabel?.text = tempString;
-        cell.detailTextLabel?.text = dateString
-        
+        let midTemp = (model.tempMax!+model.tempMin!)/2
+
+
+        cell.textLabel?.text = dateString
+        cell.detailTextLabel?.text = "\(midTemp)"
+
         return cell
     }
 
@@ -112,11 +113,19 @@ class ViewController: UIViewController, UITableViewDataSource {
         let defaultSession = URLSession(configuration: URLSessionConfiguration.default)
         var dataTask: URLSessionDataTask?
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        let url = URL(string: "http://api.openweathermap.org/data/2.5/forecast?id=524901&APPID=c4d1e7389a2e0605f6e44bd8d42c97e7&units=metric")
 
+        var urlComponents = URLComponents(string: "api.openweathermap.org/data/2.5/forecast")
+        urlComponents!.scheme = "http"
+        urlComponents!.queryItems = [
+                URLQueryItem(name: "id", value: String(self.cityModel!.id!)),
+                URLQueryItem(name: "APPID", value: "c4d1e7389a2e0605f6e44bd8d42c97e7"),
+                URLQueryItem(name: "units", value: "metric")
+        ]
+
+        let url = urlComponents!.url
 
         dataTask = defaultSession.dataTask(with: url!) {
-            data, response, error in
+            (data: Data?, response: URLResponse?, error: Error?) in
 
             DispatchQueue.main.async() {
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -127,11 +136,12 @@ class ViewController: UIViewController, UITableViewDataSource {
             } else if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
                     let dict: Dictionary<String, Any>?
+
                     dict = try! JSONSerialization.jsonObject(with: data!) as! Dictionary<String, Any>
 
                     //TODO:change "self" to "weakSelf"
                     self.parseAndSaveData(remoteDict: dict)
-                    
+
                     DispatchQueue.main.async {
                         self.refreshDatasource()
                         self.tableView.reloadData()
@@ -154,12 +164,9 @@ class ViewController: UIViewController, UITableViewDataSource {
 
         if let weatherDaysDicts = remoteDict!["list"] as! Array<Any>? {
             weatherDaysDicts.forEach {
-                weatherDays.append(WeatherDayModel.init(remoteDict: $0 as! Dictionary<String, Any>))
+                weatherDays.append(WeatherItemModel.init(remoteDict: $0 as! Dictionary<String, Any>))
             }
         }
-
-
-        self.printData()
     }
 
 
@@ -169,5 +176,14 @@ class ViewController: UIViewController, UITableViewDataSource {
         weatherDays.forEach {
             print($0)
         }
+    }
+
+    //TODO: move to date extension
+    func dayNumFromTimeInterval(_ timeInterval:TimeInterval)->Int{
+        let date = Date(timeIntervalSince1970: timeInterval)
+        let calendar = Calendar.current
+        let calendarComponents = calendar.dateComponents([.day], from: date)
+        let day = calendarComponents.day
+        return day!
     }
 }
