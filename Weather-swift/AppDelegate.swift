@@ -18,14 +18,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
-        let vc = CitiesListViewController()
-        let nc = UINavigationController(rootViewController: vc)
-        nc.navigationBar.isTranslucent = false
-
-        self.window = UIWindow()
-        self.window!.frame = UIScreen.main.bounds
-        window!.rootViewController = nc
-        window!.makeKeyAndVisible()
+        CDCitiesStorage.sharedInstance.initCD {
+            let vc = CitiesListViewController()
+            let nc = UINavigationController(rootViewController: vc)
+            nc.navigationBar.isTranslucent = false
+            
+            self.window = UIWindow()
+            self.window!.frame = UIScreen.main.bounds
+            self.window!.rootViewController = nc
+            self.window!.makeKeyAndVisible()
+        }
         return true
     }
 

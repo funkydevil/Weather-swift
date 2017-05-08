@@ -6,8 +6,6 @@
 import Foundation
 
 
-
-
 class CitiesStorage {
 
     static let sharedInstance = CitiesStorage()
