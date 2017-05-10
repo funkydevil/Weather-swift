@@ -9,8 +9,8 @@
 import Foundation
 import CoreData
 
-final class CDCity:NSManagedObject, Managed{
-    @NSManaged fileprivate(set) var name:String
-    @NSManaged fileprivate(set) var id:Int
-    
+public class CDCity:NSManagedObject{
+    @NSManaged public  var name:String
+    @NSManaged public  var id:Int
 }
+

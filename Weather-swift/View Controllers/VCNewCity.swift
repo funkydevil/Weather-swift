@@ -8,7 +8,7 @@ import UIKit
 let searchBarHeight = 50.0
 
 
-class NewCityViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+class VCNewCity: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
 
     lazy var searchBar: UISearchBar = self.lazySearchBar()
     lazy var tableView: UITableView = self.lazyTableView()

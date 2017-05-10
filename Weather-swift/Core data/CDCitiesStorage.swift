@@ -34,12 +34,19 @@ class CDCitiesStorage{
         }
     }
     
-    func getAllCities()->NSArray{
+    func getAllCities()->[CDCity]{
         let request = CDCity.sortedFetchRequest
-        
-        
+        var arrCDCitites = try! self.container!.viewContext.execute(request)
+        return []
     }
     
-    
+    func addCity(cityModel:CityModel)->CDCity{
+        //let cdC = self.container!.viewContext.insertObj()
+        let cdCity:CDCity = self.container!.viewContext.insertObj()
+        cdCity.name = cityModel.name!
+        cdCity.id = cityModel.id!
+        try! self.container!.viewContext.save()
+        return cdCity
+    }
 
 }

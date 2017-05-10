@@ -4,9 +4,11 @@
 //
 
 import UIKit
+import CoreData
 
-class CitiesListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     lazy var tableView: UITableView = self.lazyTableView()
+    lazy var fetchResultsController: NSFetchedResultsController<NSManagedObject> = self.lazyFetchResultsController()
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -34,7 +36,9 @@ class CitiesListViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     func onBtnAddTapped(_ sender: UIButton) {
-        self.switchToNewCityVC()
+        //self.switchToNewCityVC()
+        let cityModel = CityModel(name: "Norilsk", id: 1)
+        let cdCity: CDCity = CDCitiesStorage.sharedInstance.addCity(cityModel: cityModel)
     }
 
 
@@ -48,41 +52,63 @@ class CitiesListViewController: UIViewController, UITableViewDataSource, UITable
         return tableView
     }
 
-    func refreshDatasource(){
-        self.datasource = CitiesStorage.sharedInstance.allCities()
-    }
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.datasource.count
+        guard let section = self.fetchResultsController.sections?[section]
+                else {
+            return 0
+        }
+
+        return section.numberOfObjects
     }
 
+
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cdCity = self.fetchResultsController.object(at: indexPath) as! CDCity
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        if let cityModel = self.datasource[indexPath.row] as CityModel?{
-            cell.textLabel!.text = cityModel.name
-        }
+        cell.textLabel!.text = cdCity.name
         return cell
     }
+
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let cityModel = CitiesStorage.sharedInstance.allCities()[indexPath.row]
-        let vc = CityDetailsViewController(cityModel: cityModel)
+        let vc = VCCityDetails(cityModel: cityModel)
         self.navigationController!.pushViewController(vc, animated: true)
     }
 
 
 
+    //MARK: fetch results controller
+    func lazyFetchResultsController() -> NSFetchedResultsController<NSManagedObject> {
+
+        let fetchRequest = CDCity.sortedFetchRequest
+        fetchRequest.fetchBatchSize = 20
+        fetchRequest.returnsObjectsAsFaults = false
+
+        let frc = NSFetchedResultsController(fetchRequest: fetchRequest,
+                managedObjectContext: CDCitiesStorage.sharedInstance.container!.viewContext,
+                sectionNameKeyPath: nil, cacheName: nil)
+        frc.delegate = self
+
+        try! frc.performFetch()
+
+        return frc
+    }
+
+
+
+
+
     //MARK: others
-    func switchToNewCityVC(){
-        let vc = NewCityViewController()
+    func switchToNewCityVC() {
+        let vc = VCNewCity()
         self.navigationController?.pushViewController(vc, animated: true)
-        
+
         vc.blockOnCitySelected = {
-            (cityModel:CityModel) in
-            CitiesStorage.sharedInstance.addCity(cityModel: cityModel)
-            self.refreshDatasource()
-            self.tableView.reloadData()
+            (cityModel: CityModel) in
+            CDCitiesStorage.sharedInstance.addCity(cityModel: cityModel)
         }
     }
 

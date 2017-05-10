@@ -1,5 +1,5 @@
 //
-//  CityDetailsViewController.swift
+//  VCCityDetails.swift
 //  Weather-swift
 //
 //  Created by Kirill Pyulzyu on 13.04.17.
@@ -9,7 +9,7 @@
 import UIKit
 
 
-class CityDetailsViewController: UIViewController, UITableViewDataSource {
+class VCCityDetails: UIViewController, UITableViewDataSource {
 
     var cityName: String?
     var weatherDays = [WeatherItemModel]()

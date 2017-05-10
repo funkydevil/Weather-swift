@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         CDCitiesStorage.sharedInstance.initCD {
-            let vc = CitiesListViewController()
+            let vc = VCCitiesList()
             let nc = UINavigationController(rootViewController: vc)
             nc.navigationBar.isTranslucent = false
             

@@ -8,24 +8,33 @@
 
 import CoreData
 
-protocol Managed: class, NSFetchRequestResult {
-    static var entityName:String{get}
-    static var defaultSortDescriptor:[NSSortDescriptor]{get}
-}
 
-extension Managed where Self:NSManagedObject{
-    static var entityName:String{
+extension NSManagedObject {
+    
+    public static var defaultSortDescriptors: [NSSortDescriptor] {
+        return []
+    }
+
+    public static var entityName: String {
         return entity().name!
     }
 
-    static var defaultSortDescriptors:[NSSortDescriptor]{
-        return []
-    }
-    
-    static var sortedFetchRequest:NSFetchRequest<Self>{
-        let request = NSFetchRequest<Self>(entityName: entityName)
-        request.sortDescriptors = defaultSortDescriptor
+    public static var sortedFetchRequest: NSFetchRequest<NSManagedObject> {
+        let name = entityName
+        let request = NSFetchRequest<NSManagedObject>(entityName: name)
+        request.sortDescriptors = defaultSortDescriptors
         return request
     }
 }
 
+
+
+extension NSManagedObjectContext {
+    func insertObj<A:NSManagedObject>() -> A  {
+        guard let obj = NSEntityDescription.insertNewObject(forEntityName: A.entityName, into: self) as? A
+                else {
+            fatalError("Wrong object type")
+        }
+        return obj
+    }
+}
