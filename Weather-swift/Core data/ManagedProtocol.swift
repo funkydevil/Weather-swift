@@ -37,4 +37,8 @@ extension NSManagedObjectContext {
         }
         return obj
     }
+
+    func deleteObj(obj:NSManagedObject){
+        self.delete(obj)
+    }
 }

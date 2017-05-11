@@ -36,9 +36,7 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
     }
 
     func onBtnAddTapped(_ sender: UIButton) {
-        //self.switchToNewCityVC()
-        let cityModel = CityModel(name: "Norilsk", id: 1)
-        let cdCity: CDCity = CDCitiesStorage.sharedInstance.addCity(cityModel: cityModel)
+        self.switchToNewCityVC()
     }
 
 
@@ -73,10 +71,38 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let cityModel = CitiesStorage.sharedInstance.allCities()[indexPath.row]
+        let cdCity = self.fetchResultsController.object(at: indexPath) as! CDCity
+        let cityModel = CityModel.init(name: cdCity.name, id: cdCity.id)
         let vc = VCCityDetails(cityModel: cityModel)
         self.navigationController!.pushViewController(vc, animated: true)
     }
+
+
+//    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+//        return true
+//    }
+
+
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        switch editingStyle {
+        case .delete:
+            let cdCity = self.fetchResultsController.object(at: indexPath) as? CDCity
+            CDCitiesStorage.sharedInstance.container!.viewContext.deleteObj(obj: cdCity!)
+            try! CDCitiesStorage.sharedInstance.container!.viewContext.save()
+
+        case .insert:
+            print("insert")
+
+        case .none:
+            print("none")
+        }
+    }
+
+
+
+
+
+
 
 
 
@@ -97,6 +123,33 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
         return frc
     }
 
+    public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.beginUpdates()
+    }
+
+    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.endUpdates()
+    }
+
+    public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            guard let indexPath = newIndexPath else {
+                fatalError("Index path sould be not nil")
+            }
+            tableView.insertRows(at: [indexPath], with: .automatic)
+
+        case .delete:
+            guard let indexPath = indexPath else {
+                fatalError("Index path sould be not nil")
+            }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+
+        default:
+            break;
+
+        }
+    }
 
 
 
@@ -108,7 +161,7 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
 
         vc.blockOnCitySelected = {
             (cityModel: CityModel) in
-            CDCitiesStorage.sharedInstance.addCity(cityModel: cityModel)
+            _ = CDCitiesStorage.sharedInstance.addCity(cityModel: cityModel)
         }
     }
 
