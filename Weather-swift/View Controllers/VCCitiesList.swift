@@ -35,7 +35,7 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
         self.navigationItem.rightBarButtonItem = btnPlus
     }
 
-    func onBtnAddTapped(_ sender: UIButton) {
+    func onBtnAddTapped(_ sender: UIBarButtonItem) {
         self.switchToNewCityVC()
     }
 
@@ -72,10 +72,10 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let cdCity = self.fetchResultsController.object(at: indexPath) as! CDCity
-        let cityModel = CityModel.init(name: cdCity.name, id: cdCity.id)
-        let vc = VCCityDetails(cityModel: cityModel)
-        self.navigationController!.pushViewController(vc, animated: true)
+        self.switchToCityDetails(cdCity: cdCity)
     }
+
+
 
 
 //    public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -87,7 +87,7 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
         switch editingStyle {
         case .delete:
             let cdCity = self.fetchResultsController.object(at: indexPath) as? CDCity
-            CDCitiesStorage.sharedInstance.container!.viewContext.deleteObj(obj: cdCity!)
+            CDCitiesStorage.sharedInstance.deleteCity(cdCity: cdCity!)
             try! CDCitiesStorage.sharedInstance.container!.viewContext.save()
 
         case .insert:
@@ -154,7 +154,8 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
 
 
 
-    //MARK: others
+    //MARK: segues
+
     func switchToNewCityVC() {
         let vc = VCNewCity()
         self.navigationController?.pushViewController(vc, animated: true)
@@ -163,6 +164,12 @@ class VCCitiesList: UIViewController, UITableViewDataSource, UITableViewDelegate
             (cityModel: CityModel) in
             _ = CDCitiesStorage.sharedInstance.addCity(cityModel: cityModel)
         }
+    }
+
+    func switchToCityDetails(cdCity:CDCity)
+    {
+        let vc = VCCityDetails(cdCity: cdCity)
+        self.navigationController!.pushViewController(vc, animated: true)
     }
 
 

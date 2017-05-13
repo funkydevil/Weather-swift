@@ -50,4 +50,9 @@ class CDCitiesStorage{
     }
 
 
+    func deleteCity(cdCity:CDCity){
+        self.container!.viewContext.delete(cdCity)
+    }
+
+
 }
